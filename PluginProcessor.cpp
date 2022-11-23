@@ -12,6 +12,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 #endif
 )
 {
+    initialiseSynth();
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -86,12 +87,14 @@ void AudioPluginAudioProcessor::changeProgramName(int index, const juce::String 
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
+    synth.setCurrentPlaybackSampleRate (sampleRate);
+    keyboardState.reset();
 
 }
 
 void AudioPluginAudioProcessor::releaseResources()
 {
-
+    keyboardState.reset();
 }
 
 bool AudioPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const
@@ -126,6 +129,7 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto numSamples = buffer.getNumSamples();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -134,7 +138,7 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
+        buffer.clear(i, 0, numSamples);
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -148,6 +152,13 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
         juce::ignoreUnused(channelData);
         // ..do something to the data...
     }
+    // Now pass any incoming midi messages to our keyboard state object, and let it
+    // add messages to the buffer if the user is clicking on the on-screen keys
+    keyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
+
+    // and now get our synth to process these midi events and generate its output.
+    synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
+
 
 
 }
@@ -177,6 +188,18 @@ void AudioPluginAudioProcessor::setStateInformation(const void *data, int sizeIn
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     juce::ignoreUnused(data, sizeInBytes);
+}
+
+void AudioPluginAudioProcessor::initialiseSynth()
+{
+    auto numVoices = 8;
+
+    // Add some voices...
+    for (auto i = 0; i < numVoices; ++i)
+        synth.addVoice (new SineWaveVoice());
+
+    // ..and give the synth a sound to play
+    synth.addSound (new SineWaveSound());
 }
 
 //==============================================================================
