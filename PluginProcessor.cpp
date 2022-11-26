@@ -87,7 +87,7 @@ void AudioPluginAudioProcessor::changeProgramName(int index, const juce::String 
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    synth.setCurrentPlaybackSampleRate (sampleRate);
+    synth.setCurrentPlaybackSampleRate(sampleRate);
     keyboardState.reset();
 
 }
@@ -154,11 +154,10 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     }
     // Now pass any incoming midi messages to our keyboard state object, and let it
     // add messages to the buffer if the user is clicking on the on-screen keys
-    keyboardState.processNextMidiBuffer (midiMessages, 0, numSamples, true);
+    keyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
 
     // and now get our synth to process these midi events and generate its output.
-    synth.renderNextBlock (buffer, midiMessages, 0, numSamples);
-
+    synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 
 
 }
@@ -196,10 +195,14 @@ void AudioPluginAudioProcessor::initialiseSynth()
 
     // Add some voices...
     for (auto i = 0; i < numVoices; ++i)
-        synth.addVoice (new SineWaveVoice());
+    {
+        synth.addVoice(new SineWaveVoice());
+        synth.addVoice(new juce::SamplerVoice());    // and these ones play the sampled sounds
+    }
 
     // ..and give the synth a sound to play
-    synth.addSound (new SineWaveSound());
+    //synth.addSound (new SineWaveSound());
+    setUsingSampledSound();
 }
 
 //==============================================================================
