@@ -1,9 +1,9 @@
 #ifndef TK_SAMPLE_PLAYER_MYSYNTHVOICE_H
 #define TK_SAMPLE_PLAYER_MYSYNTHVOICE_H
-class SineWaveSound : public juce::SynthesiserSound
+class MySineWaveSound : public juce::SynthesiserSound
 {
 public:
-    SineWaveSound() = default;
+    MySineWaveSound() = default;
 
     bool appliesToNote (int /*midiNoteNumber*/) override    { return true; }
     bool appliesToChannel (int /*midiChannel*/) override    { return true; }
@@ -11,14 +11,14 @@ public:
 
 //==============================================================================
 /** A simple demo synth voice that just plays a sine wave.. */
-class SineWaveVoice   : public juce::SynthesiserVoice
+class MySineWaveVoice   : public juce::SynthesiserVoice
 {
 public:
-    SineWaveVoice() = default;
+    MySineWaveVoice() = default;
 
     bool canPlaySound (juce::SynthesiserSound* sound) override
     {
-        return dynamic_cast<SineWaveSound*> (sound) != nullptr;
+        return dynamic_cast<MySineWaveSound*> (sound) != nullptr;
     }
 
     void startNote (int midiNoteNumber, float velocity,

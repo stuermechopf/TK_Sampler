@@ -12,7 +12,6 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 #endif
 )
 {
-    initialiseSynth();
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -187,22 +186,6 @@ void AudioPluginAudioProcessor::setStateInformation(const void *data, int sizeIn
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     juce::ignoreUnused(data, sizeInBytes);
-}
-
-void AudioPluginAudioProcessor::initialiseSynth()
-{
-    auto numVoices = 8;
-
-    // Add some voices...
-    for (auto i = 0; i < numVoices; ++i)
-    {
-        synth.addVoice(new SineWaveVoice());
-        synth.addVoice(new juce::SamplerVoice());    // and these ones play the sampled sounds
-    }
-
-    // ..and give the synth a sound to play
-    //synth.addSound (new SineWaveSound());
-    setUsingSampledSound();
 }
 
 //==============================================================================

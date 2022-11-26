@@ -5,8 +5,8 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include "MySynthVoice.h"
-
-//#include "SampleAudioSource.h"
+#include "MySamplerVoice.h"
+#include "MySynth.h"
 
 //==============================================================================
 class AudioPluginAudioProcessor : public juce::AudioProcessor
@@ -62,35 +62,9 @@ public:
 
     juce::MidiKeyboardState keyboardState;
 
-    void setUsingSampledSound()
-    {
-        juce::WavAudioFormat wavFormat;
-
-        auto assetsDir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("JUCE_Assets");
-        auto audioFile = assetsDir.getChildFile("cello.wav");
-        jassert (audioFile.existsAsFile());
-        auto sampleStream = audioFile.createInputStream();
-        DBG(assetsDir.getFullPathName());
-        std::unique_ptr<juce::AudioFormatReader> audioReader(wavFormat.createReaderFor(sampleStream.release(), true));
-
-        juce::BigInteger allNotes;
-        allNotes.setRange(0, 128, true);
-
-        synth.clearSounds();
-        synth.addSound(new juce::SamplerSound("demo sound",
-                                              *audioReader,
-                                              allNotes,
-                                              74,   // root midi note
-                                              0.1,  // attack time
-                                              0.1,  // release time
-                                              10.0  // maximum sample length
-        ));
-    }
-
 private:
-    juce::Synthesiser synth;
+    MySynth synth;
 
-    void initialiseSynth();
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };
