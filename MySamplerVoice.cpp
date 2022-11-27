@@ -54,7 +54,7 @@ MySamplerVoice::~MySamplerVoice()
 
 bool MySamplerVoice::canPlaySound(juce::SynthesiserSound *sound)
 {
-    return dynamic_cast<const juce::SamplerSound *> (sound) != nullptr;
+    return dynamic_cast<const MySamplerSound *> (sound) != nullptr;
 }
 
 void MySamplerVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound *s,

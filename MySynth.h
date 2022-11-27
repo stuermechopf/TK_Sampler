@@ -10,16 +10,11 @@ public:
     {
         auto numVoices = 4;
 
-        // Add some voices...
         for (auto i = 0; i < numVoices; ++i)
         {
-            //addVoice(new juce::SamplerVoice());
-            addVoice(new MySamplerVoice());    // and these ones play the sampled sounds
-
+            addVoice(new MySamplerVoice());
         }
 
-        // ..and give the synth a sound to play
-        //synth.addSound (new MySineWaveSound());
         setUsingSampledSound();
     }
 
