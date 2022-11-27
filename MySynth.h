@@ -13,7 +13,6 @@ public:
         // Add some voices...
         for (auto i = 0; i < numVoices; ++i)
         {
-            addVoice(new MySineWaveVoice());
             addVoice(new juce::SamplerVoice());
             //addVoice(new MySamplerVoice());    // and these ones play the sampled sounds
 
@@ -22,11 +21,6 @@ public:
         // ..and give the synth a sound to play
         //synth.addSound (new MySineWaveSound());
         setUsingSampledSound();
-    }
-
-    void setUsingSineWaveSound()
-    {
-        addSound (new MySineWaveSound());
     }
 
     void setUsingSampledSound()

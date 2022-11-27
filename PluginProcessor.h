@@ -4,7 +4,6 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-#include "MySinWaveVoice.h"
 #include "MySamplerVoice.h"
 #include "MySynth.h"
 

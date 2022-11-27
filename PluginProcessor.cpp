@@ -189,16 +189,6 @@ void AudioPluginAudioProcessor::setStateInformation(const void *data, int sizeIn
     juce::ignoreUnused(data, sizeInBytes);
 }
 
-void AudioPluginAudioProcessor::setUsingSineWaveSound()
-{
-    synth.setUsingSineWaveSound();
-}
-
-void AudioPluginAudioProcessor::setUsingSampledSound()
-{
-    synth.setUsingSampledSound();
-}
-
 //==============================================================================
 // This creates new instances of the plugin..
 juce::AudioProcessor *JUCE_CALLTYPE createPluginFilter()
