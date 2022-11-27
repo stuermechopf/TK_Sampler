@@ -33,7 +33,7 @@ public:
         allNotes.setRange(0, 128, true);
 
         clearSounds();
-        addSound(new MySamplerSound("demo sound",
+        addSound(new MySamplerSound("snare",
                                         *audioReader,
                                         allNotes,
                                         74,   // root midi note

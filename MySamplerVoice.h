@@ -5,31 +5,31 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-class  MySamplerSound    : public juce::SynthesiserSound
+class MySamplerSound : public juce::SynthesiserSound
 {
 public:
+    MySamplerSound(const juce::String &name,
+                   juce::AudioFormatReader &source,
+                   const juce::BigInteger &midiNotes,
+                   int midiNoteForNormalPitch,
+                   double maxSampleLengthSeconds);
 
-    MySamplerSound (const juce::String& name,
-                  juce::AudioFormatReader& source,
-                  const juce::BigInteger& midiNotes,
-                  int midiNoteForNormalPitch,
-                  double maxSampleLengthSeconds);
-
-    /** Destructor. */
-    ~MySamplerSound() override;
-
+    ~MySamplerSound() override = default;
     //==============================================================================
     /** Returns the sample's name */
-    const juce::String& getName() const noexcept                  { return name; }
+    const juce::String &getName() const noexcept
+    { return name; }
 
     /** Returns the audio sample data.
         This could return nullptr if there was a problem loading the data.
     */
-    juce::AudioBuffer<float>* getAudioData() const noexcept       { return data.get(); }
+    juce::AudioBuffer<float> *getAudioData() const noexcept
+    { return data.get(); }
 
     //==============================================================================
-    bool appliesToNote (int midiNoteNumber) override;
-    bool appliesToChannel (int midiChannel) override;
+    bool appliesToNote(int midiNoteNumber) override;
+
+    bool appliesToChannel(int midiChannel) override;
 
 private:
     //==============================================================================
@@ -44,35 +44,36 @@ private:
     JUCE_LEAK_DETECTOR (MySamplerSound)
 };
 
-class MySamplerVoice    : public juce::SynthesiserVoice
+class MySamplerVoice : public juce::SynthesiserVoice
 {
 public:
 //==============================================================================
 /** Creates a SamplerVoice. */
-    MySamplerVoice();
+    MySamplerVoice()=default;
 
 /** Destructor. */
-~MySamplerVoice() override;
+    ~MySamplerVoice() override = default;
 
 //==============================================================================
-bool canPlaySound (juce::SynthesiserSound*) override;
+    bool canPlaySound(juce::SynthesiserSound *) override;
 
-void startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound*, int pitchWheel) override;
-void stopNote (float velocity, bool allowTailOff) override;
+    void startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound *, int pitchWheel) override;
 
-void pitchWheelMoved (int newValue) override;
-void controllerMoved (int controllerNumber, int newValue) override;
+    void stopNote(float velocity, bool allowTailOff) override;
 
-void renderNextBlock (juce::AudioBuffer<float>&, int startSample, int numSamples) override;
-using SynthesiserVoice::renderNextBlock;
+    void pitchWheelMoved(int newValue) override;
+
+    void controllerMoved(int controllerNumber, int newValue) override;
+
+    void renderNextBlock(juce::AudioBuffer<float> &, int startSample, int numSamples) override;
+
+    using SynthesiserVoice::renderNextBlock;
 
 private:
-//==============================================================================
-double pitchRatio = 0;
-double sourceSamplePosition = 0;
-float lgain = 0, rgain = 0;
+    uint32_t sourceSamplePosition = 0;
+    float lgain = 0, rgain = 0;
 
-JUCE_LEAK_DETECTOR (MySamplerVoice)
+    JUCE_LEAK_DETECTOR (MySamplerVoice)
 };
 
 #endif //TK_SAMPLE_PLAYER_MYSAMPLERVOICE_H

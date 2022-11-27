@@ -23,10 +23,6 @@ MySamplerSound::MySamplerSound(const juce::String &soundName,
     }
 }
 
-MySamplerSound::~MySamplerSound()
-{
-}
-
 bool MySamplerSound::appliesToNote(int midiNoteNumber)
 {
     return midiNotes[midiNoteNumber];
@@ -38,16 +34,6 @@ bool MySamplerSound::appliesToChannel(int /*midiChannel*/)
 }
 
 //===================================================================
-
-MySamplerVoice::MySamplerVoice()
-{
-
-}
-
-MySamplerVoice::~MySamplerVoice()
-{
-
-}
 
 bool MySamplerVoice::canPlaySound(juce::SynthesiserSound *sound)
 {
@@ -61,9 +47,6 @@ void MySamplerVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
     DBG("start Note ==============>0<===================");
     if (auto *sound = dynamic_cast<const MySamplerSound *> (s))
     {
-        pitchRatio = std::pow(2.0, (midiNoteNumber - sound->midiRootNote) / 12.0)
-                     * sound->sourceSampleRate / getSampleRate();
-
         sourceSamplePosition = 0.0;
         lgain = velocity;
         rgain = velocity;
@@ -74,14 +57,9 @@ void MySamplerVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
     }
 }
 
-void MySamplerVoice::stopNote(float /*velocity*/, bool allowTailOff)
+void MySamplerVoice::stopNote(float /*velocity*/, bool /*allowTailOff*/)
 {
-    if (allowTailOff)
-    {
-    } else
-    {
-        clearCurrentNote();
-    }
+    clearCurrentNote();
 }
 
 void MySamplerVoice::pitchWheelMoved(int /*newValue*/)
@@ -102,17 +80,11 @@ void MySamplerVoice::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int
         float *outL = outputBuffer.getWritePointer(0, startSample);
         float *outR = outputBuffer.getNumChannels() > 1 ? outputBuffer.getWritePointer(1, startSample) : nullptr;
 
+        DBG("render");
         while (--numSamples >= 0)
         {
-            auto pos = (int) sourceSamplePosition;
-            auto alpha = (float) (sourceSamplePosition - pos);
-            auto invAlpha = 1.0f - alpha;
-
-            // just using a very simple linear interpolation here..
-            float l = (inL[pos] * invAlpha + inL[pos + 1] * alpha);
-            float r = (inR != nullptr) ? (inR[pos] * invAlpha + inR[pos + 1] * alpha)
-                                       : l;
-
+            float l = inL[sourceSamplePosition];
+            float r = (inR != nullptr) ? inR[sourceSamplePosition] : l;
 
             if (outR != nullptr)
             {
@@ -122,14 +94,15 @@ void MySamplerVoice::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int
             {
                 *outL++ += (l + r) * 0.5f;
             }
-
-            sourceSamplePosition += pitchRatio;
+            ++sourceSamplePosition;
 
             if (sourceSamplePosition > playingSound->length)
             {
+                DBG("out of samples" << int(sourceSamplePosition));
                 stopNote(0.0f, false);
                 break;
             }
         }
+        DBG("out of samples" << int(sourceSamplePosition));
     }
 }

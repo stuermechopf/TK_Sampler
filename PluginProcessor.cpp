@@ -85,11 +85,10 @@ void AudioPluginAudioProcessor::changeProgramName(int index, const juce::String 
 }
 
 //==============================================================================
-void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int /*samplesPerBlock*/)
 {
     synth.setCurrentPlaybackSampleRate(sampleRate);
     keyboardState.reset();
-
 }
 
 void AudioPluginAudioProcessor::releaseResources()
