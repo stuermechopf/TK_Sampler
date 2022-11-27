@@ -18,10 +18,7 @@ public:
             //addVoice(new MySamplerVoice());    // and these ones play the sampled sounds
 
         }
-
-        // ..and give the synth a sound to play
-        //synth.addSound (new MySineWaveSound());
-        setUsingSampledSound();
+        setUsingSineWaveSound();
     }
 
     void setUsingSineWaveSound()
