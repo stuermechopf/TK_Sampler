@@ -1,8 +1,6 @@
 #ifndef TK_SAMPLE_PLAYER_MYSYNTH_H
 #define TK_SAMPLE_PLAYER_MYSYNTH_H
 
-#include "MySamplerVoice.h"
-
 class MySynth : public juce::Synthesiser
 {
 public:
