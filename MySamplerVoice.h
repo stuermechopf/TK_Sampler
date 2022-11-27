@@ -5,6 +5,52 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
+class  MySamplerSound    : public juce::SynthesiserSound
+{
+public:
+
+    MySamplerSound (const juce::String& name,
+                  juce::AudioFormatReader& source,
+                  const juce::BigInteger& midiNotes,
+                  int midiNoteForNormalPitch,
+                  double attackTimeSecs,
+                  double releaseTimeSecs,
+                  double maxSampleLengthSeconds);
+
+    /** Destructor. */
+    ~MySamplerSound() override;
+
+    //==============================================================================
+    /** Returns the sample's name */
+    const juce::String& getName() const noexcept                  { return name; }
+
+    /** Returns the audio sample data.
+        This could return nullptr if there was a problem loading the data.
+    */
+    juce::AudioBuffer<float>* getAudioData() const noexcept       { return data.get(); }
+
+    //==============================================================================
+    /** Changes the parameters of the ADSR envelope which will be applied to the sample. */
+    void setEnvelopeParameters (juce::ADSR::Parameters parametersToUse)    { params = parametersToUse; }
+
+    //==============================================================================
+    bool appliesToNote (int midiNoteNumber) override;
+    bool appliesToChannel (int midiChannel) override;
+
+private:
+    //==============================================================================
+    friend class MySamplerVoice;
+
+    juce::String name;
+    std::unique_ptr<juce::AudioBuffer<float>> data;
+    double sourceSampleRate;
+    juce::BigInteger midiNotes;
+    int length = 0, midiRootNote = 0;
+
+    juce::ADSR::Parameters params;
+
+    JUCE_LEAK_DETECTOR (MySamplerSound)
+};
 
 class MySamplerVoice    : public juce::SynthesiserVoice
 {

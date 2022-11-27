@@ -8,13 +8,13 @@ class MySynth : public juce::Synthesiser
 public:
     MySynth()
     {
-        auto numVoices = 8;
+        auto numVoices = 4;
 
         // Add some voices...
         for (auto i = 0; i < numVoices; ++i)
         {
-            addVoice(new juce::SamplerVoice());
-            //addVoice(new MySamplerVoice());    // and these ones play the sampled sounds
+            //addVoice(new juce::SamplerVoice());
+            addVoice(new MySamplerVoice());    // and these ones play the sampled sounds
 
         }
 
@@ -38,7 +38,7 @@ public:
         allNotes.setRange(0, 128, true);
 
         clearSounds();
-        addSound(new juce::SamplerSound("demo sound",
+        addSound(new MySamplerSound("demo sound",
                                         *audioReader,
                                         allNotes,
                                         74,   // root midi note
