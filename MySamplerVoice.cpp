@@ -86,6 +86,9 @@ void MySamplerVoice::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int
             float l = inL[sourceSamplePosition];
             float r = (inR != nullptr) ? inR[sourceSamplePosition] : l;
 
+            l *= lgain;
+            r *= rgain;
+
             if (outR != nullptr)
             {
                 *outL++ += l;
