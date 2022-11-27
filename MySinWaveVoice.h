@@ -1,5 +1,5 @@
-#ifndef TK_SAMPLE_PLAYER_MYSYNTHVOICE_H
-#define TK_SAMPLE_PLAYER_MYSYNTHVOICE_H
+#ifndef TK_SAMPLE_PLAYER_MYSINWAVEVOICE_H
+#define TK_SAMPLE_PLAYER_MYSINWAVEVOICE_H
 class MySineWaveSound : public juce::SynthesiserSound
 {
 public:
@@ -119,4 +119,4 @@ private:
     double tailOff      = 0.0;
 };
 
-#endif //TK_SAMPLE_PLAYER_MYSYNTHVOICE_H
+#endif //TK_SAMPLE_PLAYER_MYSINWAVEVOICE_H

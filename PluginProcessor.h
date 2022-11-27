@@ -4,7 +4,7 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-#include "MySynthVoice.h"
+#include "MySinWaveVoice.h"
 #include "MySamplerVoice.h"
 #include "MySynth.h"
 
@@ -59,6 +59,9 @@ public:
     void getStateInformation(juce::MemoryBlock &destData) override;
 
     void setStateInformation(const void *data, int sizeInBytes) override;
+
+    void setUsingSineWaveSound();
+    void setUsingSampledSound();
 
     juce::MidiKeyboardState keyboardState;
 

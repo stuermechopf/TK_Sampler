@@ -9,6 +9,16 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
 {
     juce::ignoreUnused(processorRef);
 
+
+    addAndMakeVisible (sineButton);
+    sineButton.setRadioGroupId (321);
+    sineButton.setToggleState (true, juce::dontSendNotification);
+    sineButton.onClick = [this] { processorRef.setUsingSineWaveSound(); };
+
+    addAndMakeVisible (sampledButton);
+    sampledButton.setRadioGroupId (321);
+    sampledButton.onClick = [this] { processorRef.setUsingSampledSound(); };
+
     addAndMakeVisible (midiKeyboard);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -33,6 +43,8 @@ void AudioPluginAudioProcessorEditor::paint(juce::Graphics &g)
 void AudioPluginAudioProcessorEditor::resized()
 {
 
+    sineButton          .setBounds (16, 76, 150, 24);
+    sampledButton       .setBounds (16, 100, 150, 24);
     auto r = getLocalBounds().reduced (8);
 
     //r.removeFromTop (26);

@@ -24,7 +24,10 @@ public:
         setUsingSampledSound();
     }
 
-private:
+    void setUsingSineWaveSound(){
+
+    }
+
     void setUsingSampledSound()
     {
         juce::WavAudioFormat wavFormat;
@@ -49,6 +52,7 @@ private:
                                         10.0  // maximum sample length
         ));
     }
+private:
 
 
 };

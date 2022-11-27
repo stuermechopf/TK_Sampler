@@ -12,6 +12,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 #endif
 )
 {
+
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -186,6 +187,16 @@ void AudioPluginAudioProcessor::setStateInformation(const void *data, int sizeIn
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     juce::ignoreUnused(data, sizeInBytes);
+}
+
+void AudioPluginAudioProcessor::setUsingSineWaveSound()
+{
+    synth.setUsingSineWaveSound();
+}
+
+void AudioPluginAudioProcessor::setUsingSampledSound()
+{
+    synth.setUsingSampledSound();
 }
 
 //==============================================================================
