@@ -1,11 +1,11 @@
 #include "MySamplerVoice.h"
 
+#include <memory>
+
 MySamplerSound::MySamplerSound(const juce::String &soundName,
                                juce::AudioFormatReader &source,
                                const juce::BigInteger &notes,
                                int midiNoteForNormalPitch,
-                               double attackTimeSecs,
-                               double releaseTimeSecs,
                                double maxSampleLengthSeconds)
         : name(soundName),
           sourceSampleRate(source.sampleRate),
@@ -17,12 +17,9 @@ MySamplerSound::MySamplerSound(const juce::String &soundName,
         length = juce::jmin((int) source.lengthInSamples,
                             (int) (maxSampleLengthSeconds * sourceSampleRate));
 
-        data.reset(new juce::AudioBuffer<float>(juce::jmin(2, (int) source.numChannels), length + 4));
+        data = std::make_unique<juce::AudioBuffer<float>>(juce::jmin(2, (int) source.numChannels), length + 4);
 
         source.read(data.get(), 0, length + 4, 0, true, true);
-
-        params.attack = static_cast<float> (attackTimeSecs);
-        params.release = static_cast<float> (releaseTimeSecs);
     }
 }
 
@@ -71,10 +68,6 @@ void MySamplerVoice::startNote(int midiNoteNumber, float velocity, juce::Synthes
         lgain = velocity;
         rgain = velocity;
 
-        adsr.setSampleRate(sound->sourceSampleRate);
-        adsr.setParameters(sound->params);
-
-        adsr.noteOn();
     } else
     {
         jassertfalse; // this object can only play SamplerSounds!
@@ -85,11 +78,9 @@ void MySamplerVoice::stopNote(float /*velocity*/, bool allowTailOff)
 {
     if (allowTailOff)
     {
-        adsr.noteOff();
     } else
     {
         clearCurrentNote();
-        adsr.reset();
     }
 }
 
@@ -102,7 +93,7 @@ void MySamplerVoice::controllerMoved(int /*controllerNumber*/, int /*newValue*/)
 //==============================================================================
 void MySamplerVoice::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int startSample, int numSamples)
 {
-    if (auto *playingSound = static_cast<MySamplerSound *> (getCurrentlyPlayingSound().get()))
+    if (auto *playingSound = dynamic_cast<MySamplerSound *> (getCurrentlyPlayingSound().get()))
     {
         auto &data = *playingSound->data;
         const float *const inL = data.getReadPointer(0);
@@ -122,10 +113,6 @@ void MySamplerVoice::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int
             float r = (inR != nullptr) ? (inR[pos] * invAlpha + inR[pos + 1] * alpha)
                                        : l;
 
-            auto envelopeValue = adsr.getNextSample();
-
-            l *= lgain * envelopeValue;
-            r *= rgain * envelopeValue;
 
             if (outR != nullptr)
             {

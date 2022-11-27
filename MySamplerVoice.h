@@ -13,8 +13,6 @@ public:
                   juce::AudioFormatReader& source,
                   const juce::BigInteger& midiNotes,
                   int midiNoteForNormalPitch,
-                  double attackTimeSecs,
-                  double releaseTimeSecs,
                   double maxSampleLengthSeconds);
 
     /** Destructor. */
@@ -30,10 +28,6 @@ public:
     juce::AudioBuffer<float>* getAudioData() const noexcept       { return data.get(); }
 
     //==============================================================================
-    /** Changes the parameters of the ADSR envelope which will be applied to the sample. */
-    void setEnvelopeParameters (juce::ADSR::Parameters parametersToUse)    { params = parametersToUse; }
-
-    //==============================================================================
     bool appliesToNote (int midiNoteNumber) override;
     bool appliesToChannel (int midiChannel) override;
 
@@ -46,8 +40,6 @@ private:
     double sourceSampleRate;
     juce::BigInteger midiNotes;
     int length = 0, midiRootNote = 0;
-
-    juce::ADSR::Parameters params;
 
     JUCE_LEAK_DETECTOR (MySamplerSound)
 };
@@ -79,8 +71,6 @@ private:
 double pitchRatio = 0;
 double sourceSamplePosition = 0;
 float lgain = 0, rgain = 0;
-
-juce::ADSR adsr;
 
 JUCE_LEAK_DETECTOR (MySamplerVoice)
 };

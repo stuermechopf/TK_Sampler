@@ -37,8 +37,6 @@ public:
                                         *audioReader,
                                         allNotes,
                                         74,   // root midi note
-                                        0.1,  // attack time
-                                        0.1,  // release time
                                         10.0  // maximum sample length
         ));
     }
