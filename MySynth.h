@@ -24,8 +24,9 @@ public:
         setUsingSampledSound();
     }
 
-    void setUsingSineWaveSound(){
-
+    void setUsingSineWaveSound()
+    {
+        addSound (new MySineWaveSound());
     }
 
     void setUsingSampledSound()
@@ -52,6 +53,7 @@ public:
                                         10.0  // maximum sample length
         ));
     }
+
 private:
 
 
