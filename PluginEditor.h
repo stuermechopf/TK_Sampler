@@ -31,8 +31,11 @@ private:
 // access the processor object that created it.
     AudioPluginAudioProcessor &processorRef;
     juce::MidiKeyboardComponent midiKeyboard;
+    juce::TextButton lowVelocity;
+    juce::TextButton highVelocity;
 
     std::atomic<bool> noteActive{false};
+    std::atomic<float> currentVelocity{0};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
 };
