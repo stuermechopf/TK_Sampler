@@ -34,12 +34,14 @@ public:
 
         clearSounds();
         addSound(new MySamplerSound("snare",
-                                        *audioReader,
-                                        allNotes,
-                                        74,   // root midi note
-                                        10.0  // maximum sample length
+                                    *audioReader,
+                                    allNotes,
+                                    74,   // root midi note
+                                    10.0  // maximum sample length
         ));
     }
+
+
 
 private:
 

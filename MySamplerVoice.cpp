@@ -80,7 +80,6 @@ void MySamplerVoice::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int
         float *outL = outputBuffer.getWritePointer(0, startSample);
         float *outR = outputBuffer.getNumChannels() > 1 ? outputBuffer.getWritePointer(1, startSample) : nullptr;
 
-        DBG("render");
         while (--numSamples >= 0)
         {
             float l = inL[sourceSamplePosition];
@@ -106,6 +105,5 @@ void MySamplerVoice::renderNextBlock(juce::AudioBuffer<float> &outputBuffer, int
                 break;
             }
         }
-        DBG("out of samples" << int(sourceSamplePosition));
     }
 }

@@ -7,9 +7,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
           processorRef(p),
           midiKeyboard(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard)
 {
-    juce::ignoreUnused(processorRef);
-
     addAndMakeVisible (midiKeyboard);
+
+    processorRef.keyboardState.addListener(this);
+
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize(500, 300);
@@ -17,6 +18,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
+    processorRef.keyboardState.removeListener(this);
 }
 
 //==============================================================================
@@ -37,4 +39,25 @@ void AudioPluginAudioProcessorEditor::resized()
     //r.removeFromTop (26);
     midiKeyboard        .setBounds (r.removeFromBottom (70));
 
+}
+
+void AudioPluginAudioProcessorEditor::timerCallback()
+{
+// update note on
+}
+
+void AudioPluginAudioProcessorEditor::handleNoteOn(juce::MidiKeyboardState *source, int midiChannel, int midiNoteNumber,
+                                                   float velocity)
+{
+    juce::ignoreUnused(source, midiChannel, midiNoteNumber, velocity);
+    DBG("Note on===");
+    noteActive=true;
+}
+
+void AudioPluginAudioProcessorEditor::handleNoteOff(juce::MidiKeyboardState *source, int midiChannel, int midiNoteNumber,
+                                               float velocity)
+{
+    juce::ignoreUnused(source, midiChannel, midiNoteNumber, velocity);
+    DBG("Note off===");
+    noteActive=false;
 }

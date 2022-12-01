@@ -41,6 +41,7 @@ private:
     juce::BigInteger midiNotes;
     int length = 0, midiRootNote = 0;
 
+
     JUCE_LEAK_DETECTOR (MySamplerSound)
 };
 
@@ -68,6 +69,7 @@ public:
     void renderNextBlock(juce::AudioBuffer<float> &, int startSample, int numSamples) override;
 
     using SynthesiserVoice::renderNextBlock;
+
 
 private:
     uint32_t sourceSamplePosition = 0;
