@@ -11,7 +11,8 @@ public:
     MySamplerSound(const juce::String &name,
                    juce::AudioFormatReader &source,
                    const juce::BigInteger &midiNotes,
-                   int midiNoteForNormalPitch,
+                   float minVelocity,
+                   float maxVelocity,
                    double maxSampleLengthSeconds);
 
     ~MySamplerSound() override = default;
@@ -31,6 +32,8 @@ public:
 
     bool appliesToChannel(int midiChannel) override;
 
+    bool appliesToVelocity(float velocity);
+
 private:
     //==============================================================================
     friend class MySamplerVoice;
@@ -39,7 +42,8 @@ private:
     std::unique_ptr<juce::AudioBuffer<float>> data;
     double sourceSampleRate;
     juce::BigInteger midiNotes;
-    int length = 0, midiRootNote = 0;
+    int length = 0;
+    float _minVelocity, _maxVelocity;
 
 
     JUCE_LEAK_DETECTOR (MySamplerSound)

@@ -5,12 +5,14 @@
 MySamplerSound::MySamplerSound(const juce::String &soundName,
                                juce::AudioFormatReader &source,
                                const juce::BigInteger &notes,
-                               int midiNoteForNormalPitch,
+                               float minVelocity,
+                               float maxVelocity,
                                double maxSampleLengthSeconds)
         : name(soundName),
           sourceSampleRate(source.sampleRate),
           midiNotes(notes),
-          midiRootNote(midiNoteForNormalPitch)
+          _minVelocity(minVelocity),
+          _maxVelocity(maxVelocity)
 {
     if (sourceSampleRate > 0 && source.lengthInSamples > 0)
     {
@@ -33,6 +35,11 @@ bool MySamplerSound::appliesToChannel(int /*midiChannel*/)
     return true;
 }
 
+bool MySamplerSound::appliesToVelocity(float velocity)
+{
+    return (velocity>=_minVelocity && velocity<= _maxVelocity);
+}
+
 //===================================================================
 
 bool MySamplerVoice::canPlaySound(juce::SynthesiserSound *sound)
@@ -40,7 +47,7 @@ bool MySamplerVoice::canPlaySound(juce::SynthesiserSound *sound)
     return dynamic_cast<const MySamplerSound *> (sound) != nullptr;
 }
 
-void MySamplerVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound *s,
+void MySamplerVoice::startNote(int /*midiNoteNumber*/, float velocity, juce::SynthesiserSound *s,
                                int /*currentPitchWheelPosition*/)
 {
 

@@ -55,7 +55,6 @@ void AudioPluginAudioProcessorEditor::timerCallback()
 {
     if (noteActive)
     {
-        DBG(currentVelocity);
         if (currentVelocity > 0.5)
         {
             highVelocity.setToggleState(true, juce::NotificationType::dontSendNotification);
